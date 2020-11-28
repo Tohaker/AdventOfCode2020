@@ -1,0 +1,32 @@
+{
+  "name": "advent-of-code-2020",
+  "version": "1.0.0",
+  "description": "Advent of Code 2020 submissions",
+  "main": "src/index.ts",
+  "scripts": {
+    "start": "ts-node --emit src/index.ts",
+    "test": "jest"
+  },
+  "keywords": [
+    "adventofcode",
+    "aoc"
+  ],
+  "author": "Miles Bardon",
+  "license": "ISC",
+  "dependencies": {
+    "typescript": "^4.1.2"
+  },
+  "devDependencies": {
+    "@tsconfig/recommended": "^1.0.1",
+    "@types/jest": "^26.0.15",
+    "@typescript-eslint/eslint-plugin": "^4.8.2",
+    "@typescript-eslint/parser": "^4.8.2",
+    "eslint": "^7.14.0",
+    "eslint-config-google": "^0.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "jest": "^26.6.3",
+    "prettier": "2.2.0",
+    "ts-jest": "^26.4.4",
+    "ts-node": "^9.0.0"
+  }
+}
