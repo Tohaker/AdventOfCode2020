@@ -1,4 +1,3 @@
-import { idText } from 'typescript';
 import { part1 } from '.';
 
 describe('Day 1', () => {
