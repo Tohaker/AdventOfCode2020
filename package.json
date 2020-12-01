@@ -5,7 +5,8 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node --emit src/index.ts",
-    "test": "jest"
+    "test": "jest",
+    "download:input": "ts-node --emit getTodaysInput.ts"
   },
   "keywords": [
     "adventofcode",
@@ -14,11 +15,13 @@
   "author": "Miles Bardon",
   "license": "ISC",
   "dependencies": {
+    "node-fetch": "^2.6.1",
     "typescript": "^4.1.2"
   },
   "devDependencies": {
     "@tsconfig/recommended": "^1.0.1",
     "@types/jest": "^26.0.15",
+    "@types/node-fetch": "^2.5.7",
     "@typescript-eslint/eslint-plugin": "^4.8.2",
     "@typescript-eslint/parser": "^4.8.2",
     "eslint": "^7.14.0",
