@@ -32,7 +32,7 @@ if (day > 0 && day < 26) {
   getInput(day).then((input) => {
     if (input) {
       const path = `${localUrl}/day${day}.json`;
-      const json = JSON.stringify(input.split('\n'));
+      const json = JSON.stringify(input.trim().split('\n'));
       fs.writeFile(path, json, {}, (err) => {
         if (err) console.log(err);
         else console.log(`Complete! Downloaded to ${path}`);
