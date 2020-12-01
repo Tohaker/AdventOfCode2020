@@ -6,7 +6,10 @@ const cliArgs = process.argv.slice(2);
 
 if (cliArgs.length) {
   const dayArg = parseInt(cliArgs[0]);
-  if (dayArg > 0) challenges[dayArg - 1].forEach((c) => c());
+  if (dayArg > 0)
+    challenges[dayArg - 1].forEach((callback, i) => {
+      console.log(`Day ${dayArg} - Part ${i + 1}: ${callback()}`);
+    });
 } else {
   challenges.forEach((day, i) => {
     day.forEach((callback, j) =>
