@@ -20,11 +20,11 @@ const permute = (
     return prev;
   }, start);
 
-const calculateResult = (input: number[], degrees: number) => {
+const calculateResult = (input: string[], degrees: number) => {
   const desiredResult = 2020;
   let actualResult = 0;
 
-  const permutations = permute(input, degrees);
+  const permutations = permute(input.map(Number), degrees);
   permutations.forEach((p) => {
     if (p.reduce((a, b) => a + b, 0) === desiredResult) {
       actualResult = p.reduce((a, b) => a * b, 1);
@@ -34,6 +34,6 @@ const calculateResult = (input: number[], degrees: number) => {
   return actualResult;
 };
 
-export const part1 = (input: number[]) => () => calculateResult(input, 2);
+export const part1 = (input: string[]) => () => calculateResult(input, 2);
 
-export const part2 = (input: number[]) => () => calculateResult(input, 3);
+export const part2 = (input: string[]) => () => calculateResult(input, 3);
