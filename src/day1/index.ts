@@ -1,35 +1,39 @@
-export const part1 = (input: number[]) => () => {
+// Had some help improving this one:
+// https://stackoverflow.com/questions/37075180/combinations-of-size-n-from-an-array
+
+const permute = (
+  input: number[],
+  degree: number,
+  start: number[][] = [],
+  total: number[] = []
+) =>
+  input.reduce((prev, current, index, input) => {
+    degree > 1
+      ? permute(
+          input.slice(0, index).concat(input.slice(index + 1)),
+          degree - 1,
+          prev,
+          (total.push(current), total)
+        )
+      : prev.push((total.push(current), total).slice(0));
+    total.pop();
+    return prev;
+  }, start);
+
+const calculateResult = (input: number[], degrees: number) => {
   const desiredResult = 2020;
   let actualResult = 0;
 
-  input.forEach((primary) =>
-    input
-      .filter((v) => v !== primary)
-      .forEach((secondary) => {
-        if (primary + secondary === desiredResult)
-          actualResult = primary * secondary;
-      })
-  );
+  const permutations = permute(input, degrees);
+  permutations.forEach((p) => {
+    if (p.reduce((a, b) => a + b, 0) === desiredResult) {
+      actualResult = p.reduce((a, b) => a * b, 1);
+    }
+  });
 
   return actualResult;
 };
 
-export const part2 = (input: number[]) => () => {
-  const desiredResult = 2020;
-  let actualResult = 0;
+export const part1 = (input: number[]) => () => calculateResult(input, 2);
 
-  input.forEach((primary) =>
-    input
-      .filter((v) => v !== primary)
-      .forEach((secondary) =>
-        input
-          .filter((v) => v !== secondary)
-          .forEach((tertiary) => {
-            if (primary + secondary + tertiary === desiredResult)
-              actualResult = primary * secondary * tertiary;
-          })
-      )
-  );
-
-  return actualResult;
-};
+export const part2 = (input: number[]) => () => calculateResult(input, 3);
