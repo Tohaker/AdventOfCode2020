@@ -5,7 +5,7 @@
   "main": "src/index.ts",
   "scripts": {
     "start": "ts-node --emit src/index.ts",
-    "test": "jest",
+    "test": "jest --watch",
     "download:input": "ts-node --emit getTodaysInput.ts"
   },
   "keywords": [

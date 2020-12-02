@@ -34,6 +34,8 @@ const calculateResult = (input: string[], degrees: number) => {
   return actualResult;
 };
 
-export const part1 = (input: string[]) => () => calculateResult(input, 2);
+const part1 = (input: string[]) => calculateResult(input, 2);
 
-export const part2 = (input: string[]) => () => calculateResult(input, 3);
+const part2 = (input: string[]) => calculateResult(input, 3);
+
+export default { part1, part2 };

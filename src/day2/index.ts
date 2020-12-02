@@ -46,7 +46,7 @@ const arePositionsComplient = ({
     pattern
   ) === 1;
 
-export const part1 = (input: string[]) => () => {
+const part1 = (input: string[]) => {
   let count = 0;
   input.forEach((line) => {
     if (isPatternCompliant(parseLine(line))) {
@@ -57,7 +57,7 @@ export const part1 = (input: string[]) => () => {
   return count;
 };
 
-export const part2 = (input: string[]) => () => {
+const part2 = (input: string[]) => {
   let count = 0;
   input.forEach((line) => {
     if (arePositionsComplient(parseLine(line))) {
@@ -66,4 +66,9 @@ export const part2 = (input: string[]) => () => {
   });
 
   return count;
+};
+
+export default {
+  part1,
+  part2,
 };
