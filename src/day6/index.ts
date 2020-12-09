@@ -1,32 +1,14 @@
-const parseInput = (
-  input: string[]
-): Array<{ form: string; count: number }> => {
-  let currentForm = '';
-  let currentCount = 0;
-  return input
-    .map((line, i) => {
-      if (line) {
-        currentForm = currentForm.concat(line);
-        currentCount++;
-        // When we reach the end of the input, anything we have collected becomes the final output.
-        if (i === input.length - 1) {
-          return { form: currentForm, count: currentCount };
-        }
-      } else {
-        // This will clone the string and count so we can reset them on the next lines.
-        const form = (' ' + currentForm).slice(1);
-        const count = Number(currentCount);
-        currentForm = '';
-        currentCount = 0;
-        return { form, count };
-      }
-    })
-    .filter((p) => p) as Array<{ form: string; count: number }>;
-};
+import { splitEntriesByBlankLine } from '../common';
+
+const parseInput = (input: string[]): Array<{ form: string; count: number }> =>
+  splitEntriesByBlankLine(input).map((line) => {
+    const count = line.split(' ').length;
+    return { form: line.replace(/\s+/g, ''), count };
+  });
 
 const countResponses = (form: string) => {
   const answers: Record<string, number> = {};
-  for (let c of form) {
+  for (const c of form) {
     answers[c] ? answers[c]++ : (answers[c] = 1);
   }
 

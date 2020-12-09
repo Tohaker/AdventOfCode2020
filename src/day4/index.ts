@@ -1,3 +1,5 @@
+import { splitEntriesByBlankLine } from '../common';
+
 const requiredKeys = ['byr', 'iyr', 'eyr', 'hgt', 'hcl', 'ecl', 'pid'].sort();
 const optionalKeys = ['cid'].sort();
 const eyeColours = ['amb', 'blu', 'brn', 'gry', 'grn', 'hzl', 'oth'];
@@ -19,23 +21,8 @@ const convertToJSON = (line: string): Passport => {
   return JSON.parse(jsonString);
 };
 
-const parsePassports = (input: string[]): Passport[] => {
-  let currentPassport = '';
-  return input
-    .map((line, i) => {
-      if (line) {
-        currentPassport = currentPassport.concat(line, ' ');
-        if (i === input.length - 1) {
-          return convertToJSON(currentPassport);
-        }
-      } else {
-        const passport = convertToJSON(currentPassport);
-        currentPassport = '';
-        return passport;
-      }
-    })
-    .filter((p) => p) as Passport[];
-};
+const parsePassports = (input: string[]): Passport[] =>
+  splitEntriesByBlankLine(input).map(convertToJSON);
 
 const findValidPassports = (input: Passport[]) =>
   input.filter((passport) => {

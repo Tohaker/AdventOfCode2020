@@ -1,18 +1,19 @@
 /**
+ * Creates an array of all possible permutations of an array, given a number of degrees of freedom.
  * Had some help improving this one:
  * https://stackoverflow.com/questions/37075180/combinations-of-size-n-from-an-array
- * @param {number[]} input Array from which to derive permutations.
+ * @param {T[]} input Array from which to derive permutations.
  * @param {number} degree How many unique values should be in each permutation.
- * @param {Array<number[]>} start (Optional) The starting permutation array.
- * @param {number[]} total (Optional) The total list of permutations.
- * @return {Array<number[]>} Array of number arrays, containing the permutations.
+ * @param {Array<T[]>} start (Optional) The starting permutation array.
+ * @param {T[]} total (Optional) The total list of permutations.
+ * @return {Array<T[]>} Array of number arrays, containing the permutations.
  */
-export const permute = (
-  input: number[],
+export const permute = <T>(
+  input: T[],
   degree: number,
-  start: number[][] = [],
-  total: number[] = []
-) =>
+  start: T[][] = [],
+  total: T[] = []
+): Array<T[]> =>
   input.reduce((prev, current, index, input) => {
     degree > 1
       ? permute(
@@ -25,3 +26,19 @@ export const permute = (
     total.pop();
     return prev;
   }, start);
+
+export const splitEntriesByBlankLine = (input: string[]) => {
+  const blankLineIndexes = input
+    .reduce((p: number[], c, i) => {
+      c.trim() === '' && p.push(i);
+      return p;
+    }, [])
+    .concat(input.length);
+
+  return blankLineIndexes.reduce((p: string[], c, i) => {
+    const lineBlock = input.slice(blankLineIndexes[i - 1] || 0, c);
+    return p.concat(
+      lineBlock.reduce((line, current) => line + current + ' ', '').trim()
+    );
+  }, []);
+};
