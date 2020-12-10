@@ -27,7 +27,7 @@ const part2 = (input: string[]) => {
   // I'm not smart enough to figure this out myself :(
 
   // Find the length of all contiguous blocks - i.e. all blocks separated by 1.
-  // These are the blocks that cannot be changed or the whole sequence fails.
+  // These are the blocks that can be changed.
   const contiguous = [];
   for (let i = 0; i < sortedInput.length - 1; i++) {
     if (sortedInput[i + 1] - sortedInput[i] === 1) {
