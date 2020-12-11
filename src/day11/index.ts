@@ -35,8 +35,13 @@ const changeSeatOccupation = (
   return seatingPlan[row][col];
 };
 
-const createEmptyPlan = (rows: number, cols: number) =>
-  Array(rows).fill(Array(cols).fill(''));
+const createEmptyPlan = (rows: number, cols: number): string[][] => {
+  const plan = Array(rows);
+  for (let i = 0; i < rows; i++) {
+    plan[i] = Array(cols).fill('');
+  }
+  return plan;
+};
 
 const part1 = (input: string[]) => {
   let startingPlan = parseInput(input);
@@ -44,9 +49,7 @@ const part1 = (input: string[]) => {
   const cols = startingPlan[0].length;
   let changedSeats = 1;
 
-  console.log(startingPlan);
-
-  for (let x = 0; x < 1; x++) {
+  while (changedSeats > 0) {
     changedSeats = 0;
     const tempPlan = createEmptyPlan(rows, cols);
 
@@ -63,8 +66,6 @@ const part1 = (input: string[]) => {
     // Make a deep copy
     startingPlan = JSON.parse(JSON.stringify(tempPlan));
   }
-
-  console.log(startingPlan);
 
   return startingPlan.reduce(
     (count, row) =>
