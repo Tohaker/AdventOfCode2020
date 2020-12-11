@@ -1,4 +1,14 @@
-export const parseInput = (input: string[]) => input.map((l) => Array.from(l));
+type SeatView = {
+  empty: number;
+  occupied: number;
+};
+
+type CbProps = (
+  previous: string,
+  i: number,
+  j: number,
+  plan: string[][]
+) => string;
 
 const changeSeatOccupation = (
   row: number,
@@ -11,21 +21,17 @@ const changeSeatOccupation = (
   const currentRow = seatingPlan[row];
   const nextRow = seatingPlan[row + 1];
 
-  const adjacentSeats = [];
+  let adjacentSeats = [currentRow[col - 1], currentRow[col + 1]];
 
-  if (previousRow) {
-    adjacentSeats.push(
-      previousRow[col - 1],
-      previousRow[col],
-      previousRow[col + 1]
+  if (previousRow)
+    adjacentSeats = adjacentSeats.concat(
+      previousRow.slice(col - 1 >= 0 ? col - 1 : 0, col + 2)
     );
-  }
 
-  adjacentSeats.push(currentRow[col - 1], currentRow[col + 1]);
-
-  if (nextRow) {
-    adjacentSeats.push(nextRow[col - 1], nextRow[col], nextRow[col + 1]);
-  }
+  if (nextRow)
+    adjacentSeats = adjacentSeats.concat(
+      nextRow.slice(col - 1 >= 0 ? col - 1 : 0, col + 2)
+    );
 
   const occupiedSeats = adjacentSeats.filter((s) => s === '#').length;
 
@@ -33,11 +39,6 @@ const changeSeatOccupation = (
   if (occupiedSeats === 0) return '#';
 
   return seatingPlan[row][col];
-};
-
-type SeatView = {
-  empty: number;
-  occupied: number;
 };
 
 export const countVisibleSeats = (
@@ -49,8 +50,8 @@ export const countVisibleSeats = (
   let empty = 0;
 
   // Cartesian directions
-  for (let u = row - 1; u >= 0; u--) {
-    const tile = seatingPlan[u][col];
+  for (let left = col - 1; left >= 0; left--) {
+    const tile = seatingPlan[row][left];
     if (tile === 'L') {
       empty++;
       break;
@@ -60,8 +61,8 @@ export const countVisibleSeats = (
     }
   }
 
-  for (let d = row + 1; d < seatingPlan.length; d++) {
-    const tile = seatingPlan[d][col];
+  for (let right = col + 1; right < seatingPlan[row].length; right++) {
+    const tile = seatingPlan[row][right];
     if (tile === 'L') {
       empty++;
       break;
@@ -71,80 +72,70 @@ export const countVisibleSeats = (
     }
   }
 
-  for (let l = col - 1; l >= 0; l--) {
-    const tile = seatingPlan[row][l];
-    if (tile === 'L') {
-      empty++;
-      break;
-    } else if (tile === '#') {
-      occupied++;
-      break;
-    }
-  }
-
-  for (let r = col + 1; r < seatingPlan[row].length; r++) {
-    const tile = seatingPlan[row][r];
-    if (tile === 'L') {
-      empty++;
-      break;
-    } else if (tile === '#') {
-      occupied++;
-      break;
-    }
-  }
-
-  // Diagonal directions
-  // Up-left and Up-right
+  // Diagonal and Vertical directions
+  // Up, Up-left and Up-right
 
   let left = col - 1;
   let right = col + 1;
+  let centre = col;
 
   let leftDone = false;
   let rightDone = false;
+  let centreDone = false;
 
   for (let u = row - 1; u >= 0; u--) {
     const leftTile = seatingPlan[u][left];
     const rightTile = seatingPlan[u][right];
+    const centreTile = seatingPlan[u][centre];
 
     empty +=
       Number(!leftDone && leftTile === 'L') +
-      Number(!rightDone && rightTile === 'L');
+      Number(!rightDone && rightTile === 'L') +
+      Number(!centreDone && centreTile === 'L');
     occupied +=
       Number(!leftDone && leftTile === '#') +
-      Number(!rightDone && rightTile === '#');
+      Number(!rightDone && rightTile === '#') +
+      Number(!centreDone && centreTile === '#');
 
     if (leftTile !== '.') leftDone = true;
     if (rightTile !== '.') rightDone = true;
+    if (centreTile !== '.') centreDone = true;
 
-    if (leftDone && rightDone) break;
+    if (leftDone && rightDone && centreDone) break;
 
     left--;
     right++;
   }
 
-  // Down-left and Down-right
+  // Down, Down-left and Down-right
 
   left = col - 1;
   right = col + 1;
+  centre = col;
 
   leftDone = false;
   rightDone = false;
+  centreDone = false;
 
   for (let d = row + 1; d < seatingPlan.length; d++) {
     const leftTile = seatingPlan[d][left];
     const rightTile = seatingPlan[d][right];
+    const centreTile = seatingPlan[d][centre];
 
     empty +=
       Number(!leftDone && leftTile === 'L') +
-      Number(!rightDone && rightTile === 'L');
+      Number(!rightDone && rightTile === 'L') +
+      Number(!centreDone && centreTile === 'L');
     occupied +=
       Number(!leftDone && leftTile === '#') +
-      Number(!rightDone && rightTile === '#');
+      Number(!rightDone && rightTile === '#') +
+      Number(!centreDone && centreTile === '#');
 
     if (leftTile !== '.') leftDone = true;
     if (rightTile !== '.') rightDone = true;
+    if (centreTile !== '.') centreDone = true;
 
-    if (leftDone && rightDone) break;
+    if (leftDone && rightDone && centreDone) break;
 
     left--;
     right++;
@@ -164,6 +155,8 @@ const newSeatStatus = (current: string, view: SeatView) => {
   return current;
 };
 
+export const parseInput = (input: string[]) => input.map((l) => Array.from(l));
+
 const createEmptyPlan = (rows: number, cols: number): string[][] => {
   const plan = Array(rows);
   for (let i = 0; i < rows; i++) {
@@ -172,7 +165,7 @@ const createEmptyPlan = (rows: number, cols: number): string[][] => {
   return plan;
 };
 
-const part1 = (input: string[]) => {
+const findOccupiedSeats = (input: string[], newValueCb: CbProps) => {
   let startingPlan = parseInput(input);
   const rows = startingPlan.length;
   const cols = startingPlan[0].length;
@@ -185,7 +178,7 @@ const part1 = (input: string[]) => {
     for (let i = 0; i < rows; i++) {
       for (let j = 0; j < cols; j++) {
         const previousValue = startingPlan[i][j];
-        const newValue = changeSeatOccupation(i, j, startingPlan);
+        const newValue = newValueCb(previousValue, i, j, startingPlan);
 
         tempPlan[i][j] = newValue;
         if (newValue !== previousValue) changedSeats++;
@@ -203,39 +196,13 @@ const part1 = (input: string[]) => {
   );
 };
 
-const part2 = (input: string[]) => {
-  let startingPlan = parseInput(input);
-  const rows = startingPlan.length;
-  const cols = startingPlan[0].length;
-  let changedSeats = 1;
+const part1 = (input: string[]) =>
+  findOccupiedSeats(input, (_, i, j, plan) => changeSeatOccupation(i, j, plan));
 
-  while (changedSeats > 0) {
-    changedSeats = 0;
-    const tempPlan = createEmptyPlan(rows, cols);
-
-    for (let i = 0; i < rows; i++) {
-      for (let j = 0; j < cols; j++) {
-        const previousValue = startingPlan[i][j];
-        const newValue = newSeatStatus(
-          previousValue,
-          countVisibleSeats(i, j, startingPlan)
-        );
-
-        tempPlan[i][j] = newValue;
-        if (newValue !== previousValue) changedSeats++;
-      }
-    }
-
-    // Make a deep copy
-    startingPlan = JSON.parse(JSON.stringify(tempPlan));
-  }
-
-  return startingPlan.reduce(
-    (count, row) =>
-      count + row.reduce((c, col) => (col === '#' ? c + 1 : c), 0),
-    0
+const part2 = (input: string[]) =>
+  findOccupiedSeats(input, (prev, i, j, plan) =>
+    newSeatStatus(prev, countVisibleSeats(i, j, plan))
   );
-};
 
 export default {
   part1,
