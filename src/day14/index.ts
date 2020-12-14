@@ -24,27 +24,24 @@ const parseInput = (input: string[]): Instruction[] => {
   return output;
 };
 
-const applyMask = (instruction: Instruction) => {
-  const binary = Number(instruction.decimal).toString(2).padStart(36, '0');
-  const mask = instruction.mask;
+const toBinary = (num: number) => Number(num).toString(2);
 
-  const valueArr = Array.from(binary);
+const applyMask = ({ mask, decimal }: Instruction) => {
+  const valueArr = Array.from(toBinary(decimal).padStart(36, '0'));
   const maskArr = Array.from(mask);
-  const resultArr = valueArr.map((c, i) => {
-    const maskValue = maskArr[i];
 
-    if (maskValue === 'X') return c;
-    else return maskValue;
-  });
+  return valueArr
+    .map((c, i) => {
+      const maskValue = maskArr[i];
 
-  return resultArr.reduce((acc, curr) => acc + curr, '');
+      if (maskValue === 'X') return c;
+      else return maskValue;
+    })
+    .reduce((acc, curr) => acc + curr, '');
 };
 
-const applyV2Mask = (instruction: Instruction) => {
-  const address = Number(instruction.address).toString(2).padStart(36, '0');
-  const mask = instruction.mask;
-
-  const addressArr = Array.from(address);
+const applyV2Mask = ({ address, mask, decimal }: Instruction) => {
+  const addressArr = Array.from(toBinary(address).padStart(36, '0'));
   const maskArr = Array.from(mask);
 
   const resultAddressArr = addressArr.map((c, i) => {
@@ -59,7 +56,7 @@ const applyV2Mask = (instruction: Instruction) => {
 
   const possibleBinaryAdditions = [];
   for (let i = 0; i < addressesToChange; i++) {
-    const value = Number(i).toString(2).padStart(floatingBits, '0');
+    const value = toBinary(i).padStart(floatingBits, '0');
     possibleBinaryAdditions.push(Array.from(value));
   }
 
@@ -85,28 +82,22 @@ const applyV2Mask = (instruction: Instruction) => {
 
   const newInstructions = memoryPermutations.map((address) => ({
     address,
-    decimal: instruction.decimal,
+    decimal,
     mask,
   }));
 
   return newInstructions;
 };
 
-const createBlankMemoryBank = (size: number) =>
-  Array(size).fill(''.padEnd(36, '0'));
-
 const part1 = (input: string[]) => {
   const instructions = parseInput(input);
-  const sorted = instructions.sort((a, b) => a.address - b.address);
-  const maxMemoryLocation = sorted[sorted.length - 1].address;
-
-  const mem = createBlankMemoryBank(maxMemoryLocation + 1);
+  const mem: Record<number, string> = {};
 
   instructions.forEach((instruction) => {
     mem[instruction.address] = applyMask(instruction);
   });
 
-  return mem
+  return Object.values(mem)
     .map((v) => parseInt(v, 2))
     .filter(Boolean)
     .reduce((acc, curr) => acc + curr, 0);
