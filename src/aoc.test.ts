@@ -13,6 +13,7 @@ import day12 from './day12';
 import day13 from './day13';
 import day14 from './day14';
 import day15 from './day15';
+import day16 from './day16';
 import input from './inputs';
 
 describe('Advent of Code 2020 Solutions', () => {
@@ -32,6 +33,7 @@ describe('Advent of Code 2020 Solutions', () => {
     [13, day13, 12, 2935, 836024966345345],
     [14, day14, 13, 8471403462063, 2667858637669],
     [15, day15, 14, 1618, 548531],
+    [16, day16, 15, 29851, 3029180675981],
   ])('should solve day %i', (_, day, index, part1, part2) => {
     expect(day.part1(input[index])).toBe(part1);
     expect(day.part2(input[index])).toBe(part2);
