@@ -17,6 +17,7 @@ import day16 from './day16';
 import day17 from './day17';
 import day18 from './day18';
 import day19 from './day19';
+import day20 from './day20';
 import input from './inputs';
 
 type Challenge = {
@@ -44,6 +45,7 @@ const completedDays: Challenge[] = [
   day17,
   day18,
   day19,
+  day20,
 ];
 
 const cliArgs = process.argv.slice(2);
