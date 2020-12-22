@@ -69,75 +69,23 @@ const removeEdges = (image: Image) =>
     .map((line) => line.slice(1, line.length - 1));
 
 const findPositionInMap = (map: string[][], id: string) => {
-  let row = 0;
-  let col = 0;
-  map.forEach((line, i) => {
+  for (let i = 0; i < map.length; i++) {
+    const line = map[i];
     if (line.includes(id)) {
-      row = i;
-      col = line.findIndex((v) => v === id);
+      return { row: i, col: line.findIndex((v) => v === id) };
     }
-  });
-
-  return {
-    row,
-    col,
-  };
+  }
+  return { row: 0, col: 0 };
 };
 
 const findNextId = (alreadyScanned: string[], idMap: string[][]) => {
-  let nextId = '';
-  idMap.forEach((row) =>
-    row.forEach((col) => {
-      if (!alreadyScanned.includes(col) && col !== '0') nextId = col;
-    })
-  );
-
-  return nextId;
-};
-
-const verifyMap = (map: Image[][], idMap: string[][]) => {
-  let valid = true;
-  for (let i = 0; i < map.length; i++) {
-    for (let j = 0; j < map[0].length; j++) {
-      const tile = map[i][j];
-
-      const tileUp = map[i - 1] ? map[i - 1][j] : undefined;
-      const tileDown = map[i + 1] ? map[i + 1][j] : undefined;
-      const tileLeft = map[i][j - 1];
-      const tileRight = map[i][j + 1];
-
-      if (
-        tileUp &&
-        arrayToString(topEdge(tile)) !== arrayToString(bottomEdge(tileUp))
-      ) {
-        valid = false;
-        console.log(`Tile above ${idMap[i][j]} misaligned`);
-      }
-      if (
-        tileDown &&
-        arrayToString(bottomEdge(tile)) !== arrayToString(topEdge(tileDown))
-      ) {
-        valid = false;
-        console.log(`Tile below ${idMap[i][j]} misaligned`);
-      }
-      if (
-        tileLeft &&
-        arrayToString(leftEdge(tile)) !== arrayToString(rightEdge(tileLeft))
-      ) {
-        valid = false;
-        console.log(`Tile left of ${idMap[i][j]} misaligned`);
-      }
-      if (
-        tileRight &&
-        arrayToString(rightEdge(tile)) !== arrayToString(leftEdge(tileRight))
-      ) {
-        valid = false;
-        console.log(`Tile right of ${idMap[i][j]} misaligned`);
-      }
+  for (let i = 0; i < idMap.length; i++) {
+    for (let j = 0; j < idMap[0].length; j++) {
+      const id = idMap[i][j];
+      if (!alreadyScanned.includes(id) && id !== '0') return id;
     }
   }
-
-  return valid;
+  return '';
 };
 
 const createMap = (images: Map<string, Image>) => {
@@ -320,8 +268,7 @@ const part1 = (input: string[]) => {
 };
 
 const part2 = (input: string[]) => {
-  const { imageMap, idMap } = createMap(parseInput(input));
-  if (!verifyMap(imageMap, idMap)) return 0;
+  const { imageMap } = createMap(parseInput(input));
 
   const finalMap = imageMap
     .map((row) => row.map(removeEdges))

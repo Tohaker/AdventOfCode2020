@@ -1,6 +1,5 @@
 const parseInput = (input: string[]) => {
   const parsed = new Map<string, string[][]>();
-  const allergenList = new Set<string>();
   let ingredientList: string[] = [];
 
   input.forEach((line) => {
@@ -9,7 +8,6 @@ const parseInput = (input: string[]) => {
     const allergens = parts[1].replace(')', '').split(', ');
 
     allergens.forEach((a) => {
-      allergenList.add(a);
       const ingList = parsed.get(a) || [];
       ingList.push(ingredients);
       parsed.set(a, ingList);
@@ -17,7 +15,7 @@ const parseInput = (input: string[]) => {
     ingredientList = ingredientList.concat(ingredients);
   });
 
-  return { parsed, allergenList, ingredientList };
+  return { parsed, ingredientList };
 };
 
 const matchIngredientsToAllergens = (list: Map<string, string[][]>) => {

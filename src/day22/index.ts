@@ -13,18 +13,22 @@ const dealCards = (input: string[]): Players => {
   };
 };
 
-const playRound = ({ player1, player2 }: Players): Players => {
-  const p1Card = player1.shift();
-  const p2Card = player2.shift();
+const playRounds = ({ player1, player2 }: Players): number[] => {
+  while (player1.length !== 0 && player2.length !== 0) {
+    const p1Card = player1.shift();
+    const p2Card = player2.shift();
 
-  if (!p1Card || !p2Card) return { player1, player2 };
+    if (!p1Card || !p2Card) break;
 
-  // Only one deck of cards, so they can't be equal
-  if (p1Card > p2Card) {
-    return { player1: [...player1, p1Card, p2Card], player2 };
-  } else {
-    return { player1, player2: [...player2, p2Card, p1Card] };
+    // Only one deck of cards, so they can't be equal
+    if (p1Card > p2Card) {
+      player1 = [...player1, p1Card, p2Card];
+    } else {
+      player2 = [...player2, p2Card, p1Card];
+    }
   }
+
+  return player1.length === 0 ? player2 : player1;
 };
 
 const playRecursiveRounds = ({
@@ -72,27 +76,21 @@ const playRecursiveRounds = ({
   return { winner, player };
 };
 
-const part1 = (input: string[]) => {
-  let players = dealCards(input);
-
-  while (players.player1.length !== 0 && players.player2.length !== 0) {
-    players = playRound(players);
-  }
-
-  const winner =
-    players.player1.length === 0 ? players.player2 : players.player1;
-
+const calculateScore = (hand: number[]) => {
   let i = 0;
-  return winner.reduceRight((a, c) => a + c * ++i, 0);
+  return hand.reduceRight((a, c) => a + c * ++i, 0);
+};
+
+const part1 = (input: string[]) => {
+  const winner = playRounds(dealCards(input));
+
+  return calculateScore(winner);
 };
 
 const part2 = (input: string[]) => {
-  const players = dealCards(input);
+  const { winner } = playRecursiveRounds(dealCards(input));
 
-  const { winner } = playRecursiveRounds(players);
-
-  let i = 0;
-  return winner.reduceRight((a, c) => a + c * ++i, 0);
+  return calculateScore(winner);
 };
 
 export default {
