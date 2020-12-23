@@ -21,6 +21,7 @@ import day19 from './day19';
 import day20 from './day20';
 import day21 from './day21';
 import day22 from './day22';
+import day23 from './day23';
 
 describe('Advent of Code 2020 Solutions', () => {
   it.each([
@@ -46,6 +47,7 @@ describe('Advent of Code 2020 Solutions', () => {
     [20, day20, 19, 17148689442341, 2009],
     [21, day21, 20, 2287, 'fntg,gtqfrp,xlvrggj,rlsr,xpbxbv,jtjtrd,fvjkp,zhszc'],
     [22, day22, 21, 32083, 35495],
+    [23, day23, 22, '72496583', 41785843847],
   ])('should solve day %i', (_, day, index, part1, part2) => {
     expect(day.part1(input[index])).toBe(part1);
     expect(day.part2(input[index])).toBe(part2);
