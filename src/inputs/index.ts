@@ -22,6 +22,7 @@ import day21 from './day21.json';
 import day22 from './day22.json';
 import day23 from './day23.json';
 import day24 from './day24.json';
+import day25 from './day25.json';
 
 export default [
   day1,
@@ -48,4 +49,5 @@ export default [
   day22,
   day23,
   day24,
+  day25,
 ];
